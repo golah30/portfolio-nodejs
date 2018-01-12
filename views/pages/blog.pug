@@ -1,0 +1,28 @@
+extends ../main.pug
+include ../_components/footer/footer.pug
+include ../_components/title/title.pug
+
+block var
+    - var title = 'Блог'
+
+block content
+    section.blog-hero
+        .container
+            .blog-hero__persone
+                .blog-hero__persone-avatar
+                    img(src="./img/persone-avatar.jpg")
+                .blog-hero__persone-desc
+                    +title('Блог')
+                    .blog-hero__subtitle Статьи, которые я написал
+                    .blog-svg-background
+                        img(src="./img/blog_header.svg", alt="")
+            .hero__socials.hero__socials--white
+                include ../_components/socials/socials.pug
+            a.hero__arrow(href='#1')
+                img(src="./img/arrow.svg", alt="")
+            include ../_components/hamburger/hamburger.pug
+    section.blog-blog(id='1')
+        .container-svg-triangles
+            include ../_components/triangle/triangle.pug
+        .container-blog
+        +footer(3)
