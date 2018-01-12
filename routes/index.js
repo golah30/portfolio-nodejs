@@ -1,44 +1,27 @@
 var express = require('express');
 var router = express.Router();
 
+const ctrlHome = require('../controllers/home');
+const ctrlBlog = require('../controllers/blog');
+const ctrlWorks = require('../controllers/works');
+const ctrlAbout = require('../controllers/about');
+
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('pages/index', { title: 'Express' });
-});
-router.get('/index', function(req, res, next) {
-  res.render('pages/index', { title: 'Express' });
-});
-router.get('/home', function(req, res, next) {
-  res.render('pages/index', { title: 'Express' });
-});
-router.get('/index.html', function(req, res, next) {
-  res.render('pages/index', { title: 'Express' });
-});
-router.get('/home.html', function(req, res, next) {
-  res.render('pages/index', { title: 'Express' });
-});
+router.get('/', ctrlHome.getIndex);
+router.get('/index', ctrlHome.getIndex);
+router.get('/home', ctrlHome.getIndex);
+router.get('/index.html', ctrlHome.getIndex);
+router.get('/home.html', ctrlHome.getIndex);
 //works page
-router.get('/works.html', function(req, res, next) {
-  res.render('pages/works', { title: 'Express' });
-});
-router.get('/works', function(req, res, next) {
-  res.render('pages/works', { title: 'Express' });
-});
+router.get('/works.html', ctrlWorks.getWorks);
+router.get('/works', ctrlWorks.getWorks);
 
 //about page
-router.get('/about.html', function(req, res, next) {
-  res.render('pages/about', { title: 'Express' });
-});
-router.get('/about', function(req, res, next) {
-  res.render('pages/about', { title: 'Express' });
-});
+router.get('/about.html', ctrlAbout.getAbout);
+router.get('/about', ctrlAbout.getAbout);
 
 //blog page
-router.get('/blog.html', function(req, res, next) {
-  res.render('pages/blog', { title: 'Express' });
-});
-router.get('/blog', function(req, res, next) {
-  res.render('pages/blog', { title: 'Express' });
-});
+router.get('/blog.html', ctrlBlog.getBlog);
+router.get('/blog', ctrlBlog.getBlog);
 
 module.exports = router;
