@@ -96,6 +96,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var animate = __webpack_require__(6);
   var paralax = __webpack_require__(7);
   var flip = __webpack_require__(8);
+  var mailer = __webpack_require__(9);
 
   window.onload = function () {
     if (document.querySelector('.hero__arrow')) scrollto(animate, 700);
@@ -104,6 +105,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     if (document.querySelector('.container-blog')) blog();
     if (document.querySelector('.slider')) slider();
     if (document.querySelector('.flip')) flip();
+    if (document.querySelector('.popout') && document.querySelector('.feedback-form')) mailer();
     if (document.querySelector('.about-contacts__map')) var map = new google.maps.Map(document.querySelector('.about-contacts__map'), {
       center: { lat: 48.575, lng: 35.09 },
       zoom: 17,
@@ -972,6 +974,153 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
       document.querySelector('.auth-button').style.display = 'block';
     });
+  };
+
+  /***/
+},
+/* 9 */
+/***/function (module, exports) {
+
+  function validate() {
+    var form = document.querySelector('.feedback-form'),
+        name = form.querySelector('.feedback-form__input[name="name"]'),
+        mail = form.querySelector('.feedback-form__input[name="mail"]'),
+        text = form.querySelector('.feedback-form__input[name="text"]');
+    var valid = true;
+    if (name.value.length < 1 || name.value == 'Заполните поле') {
+      error(name, 'Заполните поле');
+      valid = false;
+    }
+    if (name.value.length > 100) {
+      error(name, 'Слишком длинное имя');
+      valid = false;
+    }
+    if (text.value.length < 1 || text.value == 'Заполните поле') {
+      error(text, 'Заполните поле');
+      valid = false;
+    }
+    if (text.value.length > 400) {
+      error(text, 'Слишком длинное сообщение, максимальная длина - 400 символов');
+      valid = false;
+    }
+
+    if (mail.value.length < 1 || mail.value == 'Заполните поле') {
+      error(mail, 'Заполните поле');
+      valid = false;
+    } else {
+      var email = mail.value;
+      email = email.split('@');
+      if (email.length != 2) {
+        error(mail, 'Некорректно указан адрес, нет "@"');
+        valid = false;
+      } else {
+        if (email[1][email[1].length - 1] == '.') {
+          error(mail, 'Адрес не может оканчиваться на "."');
+          valid = false;
+        }
+        if (email[1].split('.').length != 2) {
+          error(mail, 'Некорректно указан адрес почты');
+          valid = false;
+        }
+      }
+    }
+
+    return valid;
+  }
+  function error(elem, msg) {
+    if (!elem.classList.contains('feedback-form__input--error')) {
+      elem.classList.add('feedback-form__input--error');
+      elem.value = msg;
+    }
+  }
+  function refresh() {
+    var form = document.querySelector('.feedback-form'),
+        name = form.querySelector('.feedback-form__input[name="name"]'),
+        mail = form.querySelector('.feedback-form__input[name="mail"]'),
+        text = form.querySelector('.feedback-form__input[name="text"]');
+    if (name.classList.contains('feedback-form__input--error')) {
+      name.classList.remove('feedback-form__input--error');
+    }
+    if (mail.classList.contains('feedback-form__input--error')) {
+      mail.classList.remove('feedback-form__input--error');
+    }
+    if (text.classList.contains('feedback-form__input--error')) {
+      text.classList.remove('feedback-form__input--error');
+    }
+    text.value = '';
+    name.value = '';
+    mail.value = '';
+  }
+  function refreshElem(e) {
+    if (e.target.classList.contains('feedback-form__input--error')) {
+      e.target.classList.remove('feedback-form__input--error');
+      e.target.value = '';
+    }
+  }
+
+  function send(e) {
+    e.preventDefault();
+    if (validate()) {
+      var form = document.querySelector('.feedback-form');
+      var xhr = new XMLHttpRequest(),
+          data = {
+        name: form.name.value,
+        mail: form.mail.value,
+        text: form.text.value
+      };
+      xhr.open('POST', '/works/email', true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.onload = function (oEvent) {
+        if (xhr.status == 200) {
+          showpop('Сообщение отправлено');
+          console.log('отправлено');
+        } else {
+          showpop('Ошибка ' + xhr.status + '. Неудалось отправить сообщение.');
+          console.log('не отправлено');
+        }
+      };
+      xhr.send(JSON.stringify(data));
+    }
+  }
+  function showpop(msg) {
+    var popoutBlock = document.querySelector('.popout'),
+        popoutContainer = document.querySelector('.popout__container');
+    var popoutContent = document.querySelector('.popout__content');
+    popoutContent.innerHTML = msg;
+    popoutBlock.classList.add('popout--active');
+    setTimeout(function () {
+      popoutBlock.classList.add('popout--active2');
+      setTimeout(function () {
+        popoutContainer.classList.add('popout__container--active');
+      }, 300);
+    }, 50);
+  }
+  function closepop() {
+    var popoutBlock = document.querySelector('.popout'),
+        popoutContainer = document.querySelector('.popout__container');
+    var popoutContent = document.querySelector('.popout__content');
+    popoutContainer.classList.remove('popout__container--active');
+    setTimeout(function () {
+      popoutBlock.classList.remove('popout--active2');
+      setTimeout(function () {
+        popoutBlock.classList.remove('popout--active');
+      }, 150);
+    }, 300);
+  }
+  module.exports = function () {
+    var form = document.querySelector('.feedback-form'),
+        name = form.querySelector('.feedback-form__input[name="name"]'),
+        mail = form.querySelector('.feedback-form__input[name="mail"]'),
+        text = form.querySelector('.feedback-form__input[name="text"]'),
+        close = document.querySelector('.popout__close');
+
+    refresh();
+    close.addEventListener('click', closepop);
+    name.addEventListener('click', refreshElem);
+    mail.addEventListener('click', refreshElem);
+    text.addEventListener('click', refreshElem);
+
+    document.querySelector('.feedback-form').addEventListener('submit', send);
   };
 
   /***/

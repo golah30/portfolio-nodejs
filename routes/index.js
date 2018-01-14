@@ -15,7 +15,7 @@ router.get('/home.html', ctrlHome.getIndex);
 //works page
 router.get('/works.html', ctrlWorks.getWorks);
 router.get('/works', ctrlWorks.getWorks);
-
+router.post('/works/email', ctrlWorks.sendEmail);
 //about page
 router.get('/about.html', ctrlAbout.getAbout);
 router.get('/about', ctrlAbout.getAbout);

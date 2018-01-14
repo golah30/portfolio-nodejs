@@ -37,10 +37,10 @@ block content
                 img(src="./img/feedback.png", alt="")  
             .feedback-form-title
                 +title('Связаться со мной')
-            form.feedback-form
-                input.feedback-form__input(type="text" placeholder='Имя')
-                input.feedback-form__input(type="text" placeholder='Email')
-                textarea.feedback-form__input(placeholder='Ваше сообщение')
+            form.feedback-form(enctype="application/x-www-form-urlencoded")
+                input.feedback-form__input(type="text" placeholder='Имя', name='name')
+                input.feedback-form__input(type="text" placeholder='Email' name='mail')
+                textarea.feedback-form__input(name='text' placeholder='Ваше сообщение')
                 .feedback-form__buttons
                     input.feedback-form__button(type="submit" value='Отправить' class='feedback-form__button--after')
                     input.feedback-form__button(type="reset" value='Очистить')    
